@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web3 API Builder</title>
+  <link rel="icon" href="https://pbs.twimg.com/profile_images/1593378273068810247/OlElGTJP_400x400.jpg"
+    type="image/x-icon">
+  <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+</head>
+
+<body>
+
+  <style>
+    .group button {
+      background-color: #238acb;
+      border: none;
+      color: white;
+      padding: 12px 24px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .group button:hover {
+      background-color: #1f22ad;
+      transform: scale(1.1);
+    }
+
+    .read_button {
+      background-color: #a6b92c !important;
+    }
+
+    .read_button:hover {
+      background-color: #d08d19 !important;
+    }
+
+
+
+    h1 {
+      font-size: 2em;
+      font-weight: bold;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #333;
+      text-shadow: 2px 2px #fff;
+      background: linear-gradient(to bottom, #f8f8f8, #ccc);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 2px 2px 10px #ccc;
+      text-align: center;
+
+    }
+
+    .group {
+      margin: 10px;
+      /* add a margin of 10px to all sides of the div */
+      /* display: inline-block; */
+      display: flex;
+      /* use flexbox for layout */
+      flex-wrap: wrap;
+      /* allow the children to wrap to a new row when necessary */
+      justify-content: space-between;
+      /* add space between child elements */
+      align-items: center;
+      padding: 10px;
+      background-color: #f5f5f5;
+      /* set a background color for the child elements */
+      border: 1px solid #ddd;
+      /* add a border around the child elements */
+      border-radius: 10px;
+      /* add rounded corners to the child elements */
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+      /* add a shadow to the child elements */
+      /* flex-basis: calc(33.33% - 20px); set the initial size of the child elements */
+      /* text-align: center;  */
+    }
+
+
+
+    /* Form container */
+    .form-container {
+      max-width: 100%;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"] {
+      /* display: block; */
+      /* width: 100%; */
+      padding: 10px;
+      /* margin-bottom: 15px; */
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      /* font-size: 16px; */
+      font-family: Arial, sans-serif;
+    }
+
+    /* Form input fields */
+    .form-input {
+      display: block;
+      width: 50%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Form submit button */
+    .form-submit {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      font-family: Arial, sans-serif;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .form-submit:hover {
+      background-color: #3e8e41;
+      transform: scale(1.1);
+    }
+  </style>
+
+  <style>
+    .connect_wallet {
+      background-color: #2a99ad;
+      /* Green background color */
+      border: none;
+      /* No border */
+      color: white;
+      /* White text color */
+      padding: 15px 32px;
+      /* Padding */
+      text-align: center;
+      /* Centered text */
+      text-decoration: none;
+      /* No underline */
+      display: inline-block;
+      /* Inline block element */
+      font-size: 16px;
+      /* Font size */
+      border-radius: 8px;
+      /* Rounded corners */
+      transition: background-color 0.3s;
+      /* Transition effect on hover */
+    }
+
+    .connect_wallet:hover {
+      background-color: #d74bc7;
+      /* Darker green background color on hover */
+    }
+  </style>
+
+  <style>
+    .wallet-info {
+      background-color: #f2f2f2;
+      /* Background color */
+      padding: 10px;
+      /* Padding */
+      border-radius: 5px;
+      /* Rounded corners */
+      font-family: Arial, sans-serif;
+      /* Font family */
+    }
+
+    .address {
+      font-size: 16px;
+      /* Font size */
+      color: #333;
+      /* Text color */
+    }
+
+    .network {
+      font-size: 14px;
+      /* Font size */
+      color: #666;
+      /* Text color */
+      margin-top: 5px;
+      /* Top margin */
+    }
+  </style>
+
+  <h1>Get Web3 API List</h1>
+
+
+  <div class="form-container">
+    <button class="connect_wallet" onclick="load()">Connect Wallet!</button>
+    <div id="wallet-info" class="wallet-info">
+      <span id="address" class="address">Wallet Address:</span><br>
+      <span id="network" class="network">Network:</span>
+    </div>
+  </div>
+
+  <form class="form-container" id="myForm">
+    <label for="input-text">Paste Contract ABI:</label>
+    <input class="form-input" type="text" id="abis" name="abis" >
+    <label for="input-text">Paste Contract Address:</label>
+    <input class="form-input" type="text" id="address" name="address" >
+    <button class="form-submit" type="submit">Submit</button>
+  </form>
+
+  <div id="result">
+  </div>
+
+  <div id="container" class="container">
+
+  </div>
+
+  <script src="https://cdn.ethers.io/lib/ethers-5.2.umd.min.js" type="application/javascript"></script>
+
+  <script>
+
+    let abi;
+    window.userWalletAddress = null;
+    window.contract = null;
+
+    const myForm = document.querySelector('#myForm');
+    myForm.addEventListener('submit', async function (event) {
+      event.preventDefault();
+
+      const formData = new FormData(myForm);
+
+      abi = formData.get('abis');
+      address = formData.get('address');
+
+      abi = JSON.parse(abi);
+
+      if(address != ""){
+        window.contract = await new window.web3.eth.Contract(abi, address);
+        console.log("Contract Instance Created");
+      }
+
+      getWriteFunctions();
+      getReadFunctions();
+
+    });
+
+    async function functionWrite() {
+      const button = event.target;
+      console.log(button.textContent)
+      let functionName = button.textContent;
+
+      const children = [...button.parentNode.children];
+      const inputs = children.filter(element => element.nodeName === 'INPUT');
+
+      const args = inputs.map(input => input.value);
+      console.log("Inputs: ",args);
+
+      if(args.length > 0){
+
+         await window.contract.methods[functionName](...args).send({ from: window.userWalletAddress })
+				.on('transactionHash', function (hash) {
+					console.log("Txn hash ",hash);
+				})
+				.on('receipt', function (receipt) {
+					console.log("Receipt ",receipt);
+				})
+				.on('error', function (error, receipt) {
+					console.log(error);
+				});
+
+      }else{
+
+         data = await window.contract.methods[functionName]().send({ from: window.userWalletAddress})
+         .on('transactionHash', function (hash) {
+					console.log("Txn hash ",hash);
+				})
+				.on('receipt', function (receipt) {
+					console.log("Receipt ",receipt);
+				})
+				.on('error', function (error, receipt) {
+					console.log(error);
+				});
+
+      }
+
+    }
+
+    async function functionRead() {
+      const button = event.target;
+      console.log(button.textContent);
+      let functionName = button.textContent;
+
+      const children = [...button.parentNode.children];
+      const inputs = children.filter(element => element.nodeName === 'INPUT');
+      const args = inputs.map(input => input.value);
+      console.log("Inputs: ",args);
+
+      if(args.length > 0){
+         await window.contract.methods[functionName](...args).call().then(function(data) {  
+          const element = document.getElementById(functionName); 
+         element.textContent = JSON.stringify(data);
+})
+      }else{
+         data = await window.contract.methods[functionName]().call().then(function(data) {  
+          const element = document.getElementById(functionName); 
+         element.textContent = JSON.stringify(data);
+})
+      }
+     
+    }
+
+    function getWriteFunctions() {
+
+      const groups = abi.filter(element => element.type === 'function' && element.stateMutability != 'view' && element.stateMutability != 'pure')
+        .map(element => {
+          const button = document.createElement('button');
+          button.textContent = element.name;
+          button.onclick = functionWrite;
+
+          const group = document.createElement('div');
+          group.setAttribute("class", "group");
+
+          group.appendChild(button);
+
+          const result = document.createElement('div');
+          result.id = element.name;
+          group.appendChild(result);
+
+          for (let i = 0; i < element.inputs.length; i++) {
+            const input = element.inputs[i];
+            const inputText = document.createElement('input');
+            inputText.setAttribute("type", "text");
+            inputText.setAttribute("placeholder", `${input.type} ${input.name}`);
+            group.appendChild(inputText);
+          }
+
+          const display = document.createElement('span');
+          // console.log(display);
+          group.appendChild(display);
+          return group;
+
+        });
+
+      const container = document.getElementById("container");
+
+      for (let i = 0; i < groups.length; i++) {
+        container.appendChild(groups[i]);
+      }
+
+    }
+
+    function getReadFunctions() {
+
+      const groups = abi.filter(element => element.type === 'function' && element.stateMutability === 'view' || element.stateMutability === 'pure')
+        .map(element => {
+          const button = document.createElement('button');
+          button.textContent = element.name;
+          button.onclick = functionRead;
+          button.classList.add('read_button');
+
+
+          const group = document.createElement('div');
+          group.setAttribute("class", "group");
+
+          group.appendChild(button);
+
+          const result = document.createElement('div');
+          result.id = element.name;
+          group.appendChild(result);
+
+          for (let i = 0; i < element.inputs.length; i++) {
+            const input = element.inputs[i];
+            const inputText = document.createElement('input');
+            inputText.setAttribute("type", "text");
+            inputText.setAttribute("placeholder", `${input.type} ${input.name}`);
+            group.appendChild(inputText);
+          }
+
+          const display = document.createElement('span');
+          // console.log(display);
+          group.appendChild(display);
+          return group;
+
+        });
+
+      const container = document.getElementById("container");
+
+      for (let i = 0; i < groups.length; i++) {
+        container.appendChild(groups[i]);
+      }
+
+    }
+
+
+    // Wallet Conenction
+
+
+    window.onload = async (event) => {
+      // 2.1 check if ethereum extension is installed
+      if (window.ethereum) {
+        // 3. create web3 instance
+        window.web3 = new Web3(window.ethereum);
+        load();
+      } else {
+        // 4. prompt user to install Metamask
+        alert("Please install MetaMask or any Ethereum Extension Wallet");
+      }
+      // 5. check if user is already logged in and update the global userWalletAddress variable
+      window.userWalletAddress = window.localStorage.getItem("userWalletAddress");
+      // 6. show the user dashboard
+      // showUserDashboard();
+    };
+
+    async function load() {
+      // 1.1 check if there is global window.web3 instance
+      if (window.web3) {
+        try {
+          // 2. get the user's ethereum account - prompts metamask to login
+          const selectedAccount = await window.ethereum
+            .request({
+              method: "eth_requestAccounts",
+            })
+            .then((accounts) => accounts[0])
+            .catch(() => {
+              // 2.1 if the user cancels the login prompt
+              throw Error("Please select an account");
+            });
+
+          // 3. set the global userWalletAddress variable to selected account
+          window.userWalletAddress = selectedAccount;
+
+          // 4. store the user's wallet address in local storage
+          window.localStorage.setItem("userWalletAddress", selectedAccount);
+          console.log("user address = ", userWalletAddress);
+
+          const addressElement = document.getElementById("address");
+          const networkElement = document.getElementById("network");
+
+          const network = await window.web3.eth.net.getId();
+
+
+          // Update the text content of the elements
+          addressElement.textContent = "Wallet Address: " + userWalletAddress;
+          networkElement.textContent = "Netwrok: " + network;
+
+        } catch (error) {
+          alert(error);
+        }
+      } else {
+        alert("wallet not found");
+      }
+    }
+
+
+
+
+  </script>
+
+
+</body>
+
+</html>
